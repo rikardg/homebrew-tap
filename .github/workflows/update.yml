@@ -1,0 +1,66 @@
+name: Update the cask
+
+# Reads the newest snapshot release of rikardg/noido and rewrites the cask.
+# Nothing is pushed from the noido repository and no secret is involved: the
+# tap only reads public data and commits with its own token.
+on:
+    schedule:
+        # A quiet minute: GitHub delays scheduled runs at the top of the hour.
+        - cron: "17 * * * *"
+    workflow_dispatch:
+
+permissions:
+    contents: write
+
+concurrency:
+    # One run at a time; a queued run is fine, two writing at once is not.
+    group: update
+    cancel-in-progress: false
+
+jobs:
+    update:
+        runs-on: ubuntu-22.04
+        steps:
+            - uses: actions/checkout@v7
+
+            - name: Find the newest snapshot
+              run: |
+                  set -eu
+                  mkdir -p .feed
+                  curl -fsSL https://github.com/rikardg/noido/releases.atom -o .feed/releases.atom
+                  tag=$(grep -o 'snapshot-[0-9]\{8\}-[0-9]\{4,6\}-[0-9a-f]\{8\}' .feed/releases.atom | sort -u | tail -1)
+                  if [ -z "$tag" ]; then
+                      echo "the feed lists no snapshot" >&2
+                      exit 1
+                  fi
+                  echo "tag=$tag" >> "$GITHUB_ENV"
+
+            - name: Fetch the checksums the cask pins
+              run: |
+                  set -eu
+                  mkdir -p .feed/shas
+                  for target in aarch64-apple-darwin x86_64-apple-darwin; do
+                      asset=$(grep -o "https://github.com/[A-Za-z0-9._-]*/[A-Za-z0-9._-]*/releases/download/$tag/noido-$target-[^\"<>[:space:]]*\.app\.zip" .feed/releases.atom | head -1)
+                      if [ -z "$asset" ]; then
+                          echo "release $tag names no $target bundle" >&2
+                          exit 1
+                      fi
+                      curl -fsSL "$asset.sha256" -o ".feed/shas/$(basename "$asset").sha256"
+                  done
+
+            - name: Render the cask
+              run: sh scripts/render.sh .feed/releases.atom .feed/shas Casks/noido-snapshot.rb
+
+            - name: Commit when the version moved
+              run: |
+                  set -eu
+                  git add Casks/noido-snapshot.rb
+                  if git diff --cached --quiet; then
+                      echo "no change"
+                      exit 0
+                  fi
+                  version=$(sed -n 's/^  version "\(.*\)"$/\1/p' Casks/noido-snapshot.rb | head -1)
+                  git -c user.name="github-actions[bot]" \
+                      -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
+                      commit -m "noido-snapshot: $version"
+                  git push
