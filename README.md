@@ -11,6 +11,9 @@ brew install --cask rikardg/tap/noido-snapshot
 That one command taps `rikardg/tap` and records the trust Homebrew asks of a
 third-party tap before it loads the tap's Ruby. Nothing else is needed.
 
+Uninstalling the cask drops that trust again — `brew uninstall` removes a
+cask's trust along with it — so a reinstall is the same one command.
+
 If you prefer to tap first and install by the short name, Homebrew wants the
 trust stated explicitly:
 
