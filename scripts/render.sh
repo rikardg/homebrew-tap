@@ -74,22 +74,9 @@ digest_of() {
 sha_arm=$(digest_of "$url_arm")
 sha_intel=$(digest_of "$url_intel")
 
-# Write only when the candidate is newer than what OUT already carries. brew
-# never downgrades, so a backwards step would stall `brew upgrade` silently.
-candidate="$stamp-$commit"
-if [ -f "$out" ]; then
-    current=$(sed -n 's/^  version "\(.*\)"$/\1/p' "$out" | head -1)
-    if [ -n "$current" ]; then
-        current_key=${current#*+}
-        newest=$(printf '%s\n%s\n' "$candidate" "$current_key" | sort | tail -1)
-        # Equal counts as "no change": a re-run must not touch the file.
-        if [ "$newest" = "$current_key" ]; then
-            echo "no change: $out already has $current"
-            exit 0
-        fi
-    fi
-fi
-
+# Render first, then decide. A newer release must win, a re-run must touch
+# nothing, and a template change must reach an unchanged release — the last
+# one is why the comparison is on the whole file and not on the version.
 tmp="$out.tmp.$$"
 trap 'rm -f "$tmp"' EXIT INT TERM
 sed -e "s|{{version}}|$version|g" \
@@ -98,5 +85,25 @@ sed -e "s|{{version}}|$version|g" \
     -e "s|{{sha_arm}}|$sha_arm|g" \
     -e "s|{{sha_intel}}|$sha_intel|g" \
     "$template" >"$tmp"
+
+candidate="$stamp-$commit"
+if [ -f "$out" ]; then
+    current=$(sed -n 's/^  version "\(.*\)"$/\1/p' "$out" | head -1)
+    if [ -n "$current" ]; then
+        current_key=${current#*+}
+        newest=$(printf '%s\n%s\n' "$candidate" "$current_key" | sort | tail -1)
+        # Older than what is there: brew never downgrades, so writing this
+        # would stall `brew upgrade` silently until the next press.
+        if [ "$newest" = "$current_key" ] && [ "$current_key" != "$candidate" ]; then
+            echo "no change: $out already has $current, which is newer"
+            exit 0
+        fi
+    fi
+    if cmp -s "$tmp" "$out"; then
+        echo "no change: $out is already $version"
+        exit 0
+    fi
+fi
+
 mv "$tmp" "$out"
 echo "$out: $version"

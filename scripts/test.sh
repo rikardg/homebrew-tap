@@ -66,4 +66,10 @@ minute="$tmp/minute.rb"
 sh "$render" "$tmp/minute.xml" "$fixtures" "$minute" || fail "a minute-resolution tag failed"
 grep -q 'version "0.1.0+20261114-2130-abc12345"' "$minute" || fail "minute-resolution version"
 
+# 6. A template change reaches an unchanged release: same version, different
+# content, so the cask is rewritten rather than left stale.
+printf '\n# a stale line the renderer must replace\n' >>"$out"
+sh "$render" "$fixtures/feed.xml" "$fixtures" "$out" >"$tmp/sixth.log" 2>&1 || fail "re-render after an edit failed"
+grep -q 'a stale line' "$out" && fail "a stale line survived the re-render"
+
 echo "all render tests passed"
