@@ -20,6 +20,10 @@ cask "noido-snapshot" do
   app "noido.app"
   binary "#{appdir}/noido.app/Contents/MacOS/noido"
 
+  # An upgrade replaces the bundle in place; without this the running app
+  # is written over under itself.
+  uninstall quit: "io.github.rikardg.noido"
+
   # The app is ad-hoc signed and not notarized, so a quarantined copy would
   # hit Gatekeeper on every version. Strip the attribute from the staged
   # tree: no quarantine attribute means no Gatekeeper prompt.
