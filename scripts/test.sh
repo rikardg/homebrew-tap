@@ -59,4 +59,11 @@ if sh "$render" "$fixtures/feed.xml" "$badshas" "$tmp/bad.rb" >"$tmp/fourth.log"
 fi
 [ -e "$tmp/bad.rb" ] && fail "a failed render must not write the cask"
 
+# 5. A minute-resolution tag — what the releases published before the
+# seconds change carry — still renders.
+sed 's/213045/2130/g' "$fixtures/feed.xml" >"$tmp/minute.xml"
+minute="$tmp/minute.rb"
+sh "$render" "$tmp/minute.xml" "$fixtures" "$minute" || fail "a minute-resolution tag failed"
+grep -q 'version "0.1.0+20261114-2130-abc12345"' "$minute" || fail "minute-resolution version"
+
 echo "all render tests passed"

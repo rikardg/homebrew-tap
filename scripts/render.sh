@@ -25,7 +25,7 @@ die() {
 
 # Highest stamp wins. Fixed-width stamps sort lexicographically, and one tag
 # appears several times in its entry (id, href, title, body), so unique first.
-tag=$(grep -o 'snapshot-[0-9]\{8\}-[0-9]\{6\}-[0-9a-f]\{8\}' "$feed" | sort -u | tail -1)
+tag=$(grep -o 'snapshot-[0-9]\{8\}-[0-9]\{4,6\}-[0-9a-f]\{8\}' "$feed" | sort -u | tail -1)
 [ -n "$tag" ] || die "no snapshot tag in $feed"
 
 stamp=${tag#snapshot-}
