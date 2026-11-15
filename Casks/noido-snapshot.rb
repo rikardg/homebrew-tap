@@ -1,15 +1,15 @@
 cask "noido-snapshot" do
-  version "0.1.0+20261115-162703-330c6122"
+  version "0.1.0+20261115-213110-330c6122"
 
   on_macos do
     on_arm do
-      sha256 "691d8bfb8a202001e5c926616e3a6edb98455121dddf5e6b7780893b15458a9c"
-      url "https://github.com/rikardg/noido/releases/download/snapshot-20261115-162703-330c6122/noido-aarch64-apple-darwin-0.1.0+330c6122.app.zip"
+      sha256 "2413481f28a85741c672c456db43e1a5c71f417d1e0c33e244cc7bbbfb49ab9d"
+      url "https://github.com/rikardg/noido/releases/download/snapshot-20261115-213110-330c6122/noido-aarch64-apple-darwin-0.1.0+330c6122.app.zip"
     end
 
     on_intel do
-      sha256 "8594e0b16c0754829c09b7bfcadc388ccd39684e4167d0dc69312a8eb5ca3557"
-      url "https://github.com/rikardg/noido/releases/download/snapshot-20261115-162703-330c6122/noido-x86_64-apple-darwin-0.1.0+330c6122.app.zip"
+      sha256 "7ef1bc1dd172eb8b10b566eadbc51eb6c5ef340eac5eea5404f30207b64c6e14"
+      url "https://github.com/rikardg/noido/releases/download/snapshot-20261115-213110-330c6122/noido-x86_64-apple-darwin-0.1.0+330c6122.app.zip"
     end
   end
 
