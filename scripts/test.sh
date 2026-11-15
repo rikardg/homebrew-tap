@@ -72,4 +72,26 @@ printf '\n# a stale line the renderer must replace\n' >>"$out"
 sh "$render" "$fixtures/feed.xml" "$fixtures" "$out" >"$tmp/sixth.log" 2>&1 || fail "re-render after an edit failed"
 grep -q 'a stale line' "$out" && fail "a stale line survived the re-render"
 
+# 7. An older release must not walk a newer cask backwards: brew never
+# downgrades, so writing it would stall `brew upgrade` until the next press.
+newer="$tmp/newer.rb"
+sh "$render" "$fixtures/feed.xml" "$fixtures" "$newer" >/dev/null
+awk 'BEGIN{done=0} /^  version "/ && !done { print "  version \"0.1.0+20261201-000000-deadbeef\""; done=1; next } { print }' \
+    "$newer" >"$newer.tmp"
+mv "$newer.tmp" "$newer"
+before=$(cksum "$newer")
+sh "$render" "$fixtures/feed.xml" "$fixtures" "$newer" >"$tmp/seventh.log" 2>&1 || fail "a downgrade attempt should exit 0"
+[ "$before" = "$(cksum "$newer")" ] || fail "a downgrade attempt rewrote the cask"
+grep -qi 'newer' "$tmp/seventh.log" || fail "a downgrade attempt should say why it did nothing"
+
+# 8. A cask whose version line is gone is a mistake to fix by hand, not to
+# overwrite with whatever the feed says.
+broken="$tmp/broken.rb"
+sh "$render" "$fixtures/feed.xml" "$fixtures" "$broken" >/dev/null
+grep -v '^  version "' "$broken" >"$broken.tmp"
+mv "$broken.tmp" "$broken"
+if sh "$render" "$fixtures/feed.xml" "$fixtures" "$broken" >"$tmp/eighth.log" 2>&1; then
+    fail "a cask without a version line should stop the render"
+fi
+
 echo "all render tests passed"

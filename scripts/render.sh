@@ -80,24 +80,33 @@ sha_intel=$(digest_of "$url_intel")
 tmp="$out.tmp.$$"
 trap 'rm -f "$tmp"' EXIT INT TERM
 sed -e "s|{{version}}|$version|g" \
+    -e "s|{{stamp}}|$stamp|g" \
+    -e "s|{{commit}}|$commit|g" \
     -e "s|{{url_arm}}|$url_arm|g" \
     -e "s|{{url_intel}}|$url_intel|g" \
     -e "s|{{sha_arm}}|$sha_arm|g" \
     -e "s|{{sha_intel}}|$sha_intel|g" \
     "$template" >"$tmp"
 
+# A template line naming a placeholder this script does not know would ship
+# a literal `{{…}}` into the cask, which parses and installs as garbage.
+# `{{staged_path}}` belongs to the cask itself and stays as it is.
+leftovers=$(grep -o '{{[a-z_]*}}' "$tmp" | sort -u | grep -v '^{{staged_path}}$' || true)
+[ -z "$leftovers" ] || die "$template has placeholders this script does not fill: $leftovers"
+
 candidate="$stamp-$commit"
 if [ -f "$out" ]; then
     current=$(sed -n 's/^  version "\(.*\)"$/\1/p' "$out" | head -1)
-    if [ -n "$current" ]; then
-        current_key=${current#*+}
-        newest=$(printf '%s\n%s\n' "$candidate" "$current_key" | sort | tail -1)
-        # Older than what is there: brew never downgrades, so writing this
-        # would stall `brew upgrade` silently until the next press.
-        if [ "$newest" = "$current_key" ] && [ "$current_key" != "$candidate" ]; then
-            echo "no change: $out already has $current, which is newer"
-            exit 0
-        fi
+    # No version line means someone edited or broke the cask; overwriting it
+    # could walk it backwards, so stop and let a person look.
+    [ -n "$current" ] || die "$out has no version line"
+    current_key=${current#*+}
+    newest=$(printf '%s\n%s\n' "$candidate" "$current_key" | sort | tail -1)
+    # Older than what is there: brew never downgrades, so writing this
+    # would stall `brew upgrade` silently until the next press.
+    if [ "$newest" = "$current_key" ] && [ "$current_key" != "$candidate" ]; then
+        echo "no change: $out already has $current, which is newer"
+        exit 0
     fi
     if cmp -s "$tmp" "$out"; then
         echo "no change: $out is already $version"

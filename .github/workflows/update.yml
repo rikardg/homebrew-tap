@@ -45,13 +45,27 @@ jobs:
                           echo "release $tag names no $target bundle" >&2
                           exit 1
                       fi
-                      curl -fsSL "$asset.sha256" -o ".feed/shas/$(basename "$asset").sha256"
+                      # The release is created before its assets are uploaded, so
+                      # a run can catch one half-published. That is "next hour",
+                      # not a failure — a red mark here would train us to ignore
+                      # the only signal real breakage has.
+                      if ! curl -fsSL "$asset.sha256" -o ".feed/shas/$(basename "$asset").sha256"; then
+                          echo "the assets of $tag are still uploading; next hour" >&2
+                          echo "skip=1" >> "$GITHUB_ENV"
+                          exit 0
+                      fi
                   done
 
             - name: Render the cask
+              if: env.skip != '1'
               run: sh scripts/render.sh .feed/releases.atom .feed/shas Casks/noido-snapshot.rb
 
+            - name: Check the cask parses
+              if: env.skip != '1'
+              run: ruby -c Casks/noido-snapshot.rb
+
             - name: Commit when the version moved
+              if: env.skip != '1'
               run: |
                   set -eu
                   git add Casks/noido-snapshot.rb

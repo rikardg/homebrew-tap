@@ -68,4 +68,9 @@ workflow (or run it by hand).
   registered and "Open With" offers two apps.
 - `brew upgrade` prints a "signer changed" warning on every upgrade. It is
   harmless here: the new bundle is unquarantined before it is installed.
+- `which -a noido`: a copy in `~/.cargo/bin` (from `cargo install` or
+  `just install`) comes before `/opt/homebrew/bin` in a usual PATH and
+  shadows the cask's command. `noido --version` then keeps reporting the
+  old commit after a successful upgrade. Check `brew list --cask
+  --versions`, or the app in `/Applications`, not the shell's copy.
 - Snapshot builds replace each other; there is no version to pin.
