@@ -5,13 +5,20 @@ A Homebrew cask that installs the newest [noido](https://github.com/rikardg/noid
 command.
 
 ```
-brew tap rikardg/tap
-brew trust --cask rikardg/tap/noido-snapshot
 brew install --cask rikardg/tap/noido-snapshot
 ```
 
-`brew trust` is Homebrew's own gate for third-party taps, not something this
-tap invented; installing by the full name records it for you instead.
+That one command taps `rikardg/tap` and records the trust Homebrew asks of a
+third-party tap before it loads the tap's Ruby. Nothing else is needed.
+
+If you prefer to tap first and install by the short name, Homebrew wants the
+trust stated explicitly:
+
+```
+brew tap rikardg/tap
+brew trust --cask rikardg/tap/noido-snapshot
+brew install --cask noido-snapshot
+```
 
 Update whenever you like:
 
