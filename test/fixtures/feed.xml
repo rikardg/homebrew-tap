@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en-US">
+  <id>tag:github.com,2008:https://github.com/rikardg/noido/releases</id>
+  <link type="text/html" rel="alternate" href="https://github.com/rikardg/noido/releases"/>
+  <link type="application/atom+xml" rel="self" href="https://github.com/rikardg/noido/releases.atom"/>
+  <title>Release notes from noido</title>
+  <updated>2026-11-14T21:30:45Z</updated>
+  <entry>
+    <id>tag:github.com,2008:Repository/1432633098/snapshot-20261113-101010-ffffffff</id>
+    <updated>2026-11-13T10:12:00Z</updated>
+    <link rel="alternate" type="text/html" href="https://github.com/rikardg/noido/releases/tag/snapshot-20261113-101010-ffffffff"/>
+    <title>Snapshot 20261113-101010 (ffffffff)</title>
+    <content type="html">&lt;p&gt;Snapshot of commit &lt;code&gt;ffffffff&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;macOS app, Apple Silicon&lt;/strong&gt; (the Homebrew cask installs this)&lt;/p&gt;
+&lt;div class="snippet-clipboard-content" data-snippet-clipboard-copy-content="curl -fLO https://github.com/rikardg/noido/releases/download/snapshot-20261113-101010-ffffffff/noido-aarch64-apple-darwin-0.1.0+ffffffff.app.zip"&gt;&lt;pre class="notranslate"&gt;&lt;code class="notranslate"&gt;curl -fLO https://github.com/rikardg/noido/releases/download/snapshot-20261113-101010-ffffffff/noido-aarch64-apple-darwin-0.1.0+ffffffff.app.zip
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;strong&gt;macOS app, Intel&lt;/strong&gt; (the Homebrew cask installs this)&lt;/p&gt;
+&lt;div class="snippet-clipboard-content" data-snippet-clipboard-copy-content="curl -fLO https://github.com/rikardg/noido/releases/download/snapshot-20261113-101010-ffffffff/noido-x86_64-apple-darwin-0.1.0+ffffffff.app.zip"&gt;&lt;pre class="notranslate"&gt;&lt;code class="notranslate"&gt;curl -fLO https://github.com/rikardg/noido/releases/download/snapshot-20261113-101010-ffffffff/noido-x86_64-apple-darwin-0.1.0+ffffffff.app.zip
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+</content>
+  </entry>
+  <entry>
+    <id>tag:github.com,2008:Repository/1432633098/snapshot-20261114-213045-abc12345</id>
+    <updated>2026-11-14T21:36:00Z</updated>
+    <link rel="alternate" type="text/html" href="https://github.com/rikardg/noido/releases/tag/snapshot-20261114-213045-abc12345"/>
+    <title>Snapshot 20261114-213045 (abc12345)</title>
+    <content type="html">&lt;p&gt;Snapshot of commit &lt;code&gt;abc12345&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Linux&lt;/strong&gt; (x86_64, glibc 2.35 or newer)&lt;/p&gt;
+&lt;div class="snippet-clipboard-content" data-snippet-clipboard-copy-content="curl -fLO https://github.com/rikardg/noido/releases/download/snapshot-20261114-213045-abc12345/noido-x86_64-unknown-linux-gnu-0.1.0+abc12345.tar.gz"&gt;&lt;pre class="notranslate"&gt;&lt;code class="notranslate"&gt;curl -fLO https://github.com/rikardg/noido/releases/download/snapshot-20261114-213045-abc12345/noido-x86_64-unknown-linux-gnu-0.1.0+abc12345.tar.gz
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;strong&gt;macOS app, Apple Silicon&lt;/strong&gt; (the Homebrew cask installs this)&lt;/p&gt;
+&lt;div class="snippet-clipboard-content" data-snippet-clipboard-copy-content="curl -fLO https://github.com/rikardg/noido/releases/download/snapshot-20261114-213045-abc12345/noido-aarch64-apple-darwin-0.1.0+abc12345.app.zip"&gt;&lt;pre class="notranslate"&gt;&lt;code class="notranslate"&gt;curl -fLO https://github.com/rikardg/noido/releases/download/snapshot-20261114-213045-abc12345/noido-aarch64-apple-darwin-0.1.0+abc12345.app.zip
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;strong&gt;macOS app, Intel&lt;/strong&gt; (the Homebrew cask installs this)&lt;/p&gt;
+&lt;div class="snippet-clipboard-content" data-snippet-clipboard-copy-content="curl -fLO https://github.com/rikardg/noido/releases/download/snapshot-20261114-213045-abc12345/noido-x86_64-apple-darwin-0.1.0+abc12345.app.zip"&gt;&lt;pre class="notranslate"&gt;&lt;code class="notranslate"&gt;curl -fLO https://github.com/rikardg/noido/releases/download/snapshot-20261114-213045-abc12345/noido-x86_64-apple-darwin-0.1.0+abc12345.app.zip
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+</content>
+  </entry>
+</feed>

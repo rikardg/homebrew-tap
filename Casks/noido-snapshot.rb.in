@@ -1,0 +1,29 @@
+cask "noido-snapshot" do
+  version "{{version}}"
+
+  on_macos do
+    on_arm do
+      sha256 "{{sha_arm}}"
+      url "{{url_arm}}"
+    end
+
+    on_intel do
+      sha256 "{{sha_intel}}"
+      url "{{url_intel}}"
+    end
+  end
+
+  name "noido"
+  desc "PDF reader and note taker"
+  homepage "https://github.com/rikardg/noido"
+
+  app "noido.app"
+  binary "#{appdir}/noido.app/Contents/MacOS/noido"
+
+  # The app is ad-hoc signed and not notarized, so a quarantined copy would
+  # hit Gatekeeper on every version. Strip the attribute from the staged
+  # tree: no quarantine attribute means no Gatekeeper prompt.
+  preflight_steps do
+    run "/usr/bin/xattr", args: ["-r", "-d", "com.apple.quarantine", "{{staged_path}}"]
+  end
+end
